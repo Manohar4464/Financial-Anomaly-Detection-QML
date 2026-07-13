@@ -1,0 +1,176 @@
+Financial Anomaly Detection using Quantum Machine Learning (QML)
+04_Contributors.txt
+Project Contributors
+
+This project, Financial Anomaly Detection using Quantum Machine Learning (QML), was developed as a collaborative effort for the All India Quantum Valley Hackathon (AQVH) 2025 and was successfully presented in the Semi-Final Round. The project demonstrates the practical application of Quantum Machine Learning (QML) for detecting anomalous financial transactions using a hybrid quantum-classical approach.
+
+Each team member contributed to different phases of the project, including dataset preparation, backend development, quantum algorithm implementation, model evaluation, documentation, and presentation. The successful completion of this project was the result of effective teamwork, technical collaboration, and continuous knowledge sharing.
+
+Team Details
+
+Project Title: Financial Anomaly Detection using Quantum Machine Learning (QML)
+
+Event: All India Quantum Valley Hackathon (AQVH) 2025
+
+Achievement: Selected and Presented in the Semi-Final Round
+
+Technology Stack:
+
+Python
+Qiskit
+Qiskit Machine Learning
+Scikit-Learn
+Pandas
+NumPy
+Plotly Dash
+Matplotlib
+
+Contributor 1
+Name
+P. S. V. Ganesh
+
+Role
+
+Dataset Collection & Backend Development
+
+Responsibilities
+
+P. S. V. Ganesh played a significant role in collecting and organizing the dataset required for developing the anomaly detection model. Along with data collection, he actively contributed to backend development by supporting the integration of preprocessing modules and assisting in connecting various project components.
+
+Key Contributions
+Collected and organized the financial transaction dataset.
+Verified dataset quality and structure before preprocessing.
+Assisted in backend application development.
+Supported integration of data preprocessing modules.
+Collaborated in connecting machine learning components with the application workflow.
+Participated in debugging and testing backend functionalities.
+Contributed to the overall system integration process.
+
+Contributor 2
+Name
+Ravinuthala Leela Venkata Lakshmi Manohar
+
+Role
+
+Data Preparation & Backend Development
+
+Responsibilities
+
+Ravinuthala Leela Venkata Lakshmi Manohar was responsible for preparing the dataset for machine learning and developing the core backend logic of the project. His work involved designing the complete preprocessing pipeline, implementing Quantum Machine Learning algorithms, integrating the prediction system, and developing the interactive dashboard.
+
+Key Contributions
+Performed data preprocessing and feature preparation.
+Implemented feature engineering techniques for transaction analysis.
+Developed the preprocessing pipeline using StandardScaler and One-Hot Encoding.
+Integrated Quantum Support Vector Classifier (QSVC) into the application.
+Configured the ZZFeatureMap and Fidelity Quantum Kernel.
+Developed the backend workflow for model training and prediction.
+Implemented threshold optimization for anomaly detection.
+Built and integrated the interactive Dash-based prediction dashboard.
+Conducted model evaluation using Accuracy, Precision, Recall, F1-Score, ROC-AUC, and Confusion Matrix.
+Assisted in debugging, testing, and deployment of the complete application.
+
+Contributor 3
+Name
+M. Moses Pal
+
+Role
+
+Quantum Algorithm Integration & Research and Feature Engineering
+
+Responsibilities
+
+M. Moses Pal focused on researching Quantum Machine Learning techniques and contributed to integrating quantum algorithms into the project. He also participated in identifying meaningful transaction features and studying existing fraud detection methodologies.
+
+Key Contributions
+Researched Quantum Machine Learning concepts.
+Studied Quantum Support Vector Classification (QSVC).
+Assisted in integrating quantum algorithms using Qiskit.
+Contributed to selecting appropriate quantum feature maps.
+Supported feature engineering for transaction behavior analysis.
+Participated in reviewing research papers related to financial fraud detection.
+Assisted in improving the overall machine learning workflow.
+
+Contributor 4
+Name
+M. Vivekananda Siddhardha
+
+Role
+
+Quantum Algorithm Integration & Research and Feature Engineering
+
+Responsibilities
+
+M. Vivekananda Siddhardha worked alongside the quantum research team to investigate suitable Quantum Machine Learning techniques and assisted in designing feature engineering strategies for anomaly detection.
+
+Key Contributions
+Participated in Quantum Machine Learning research.
+Assisted in implementing quantum kernel-based classification.
+Contributed to the integration of QSVC into the project workflow.
+Supported the development of behavioral transaction features.
+Studied quantum feature mapping techniques.
+Assisted in validating research findings during implementation.
+Collaborated in improving model performance through feature analysis.
+
+Contributor 5
+Name
+M. Nasrima
+
+Role
+
+Model Testing & Performance Analysis
+
+Responsibilities
+
+M. Nasrima was responsible for validating the trained models and analyzing their performance using various evaluation metrics. She compared the Quantum Machine Learning model with the classical baseline and helped verify the correctness of predictions.
+
+Key Contributions
+Tested the trained machine learning models.
+Compared Quantum Support Vector Classifier with Random Forest.
+Recorded experimental observations.
+Evaluated Accuracy, Precision, Recall, F1-Score, and ROC-AUC.
+Verified anomaly detection results.
+Assisted in identifying possible improvements to model performance.
+Supported final testing before project presentation.
+
+Contributor 6
+Name
+A. Saranya
+
+Role
+
+Documentation & Presentation
+
+Responsibilities
+
+A. Saranya was responsible for preparing project documentation and presentation materials used during the AQVH 2025 Semi-Final presentation. She ensured that the technical aspects of the project were communicated clearly and professionally.
+
+Key Contributions
+Prepared project documentation.
+Created presentation slides.
+Organized project workflow diagrams.
+Assisted in preparing architecture illustrations.
+Coordinated presentation content.
+Supported the team during the project demonstration.
+Helped communicate the project's objectives, methodology, and results effectively.
+
+Team Collaboration
+
+The project followed a collaborative software development approach where each team member contributed according to their area of expertise while maintaining continuous communication throughout the development lifecycle.
+
+The project development process included:
+
+Requirement Analysis
+Literature Review
+Dataset Collection
+Data Preparation
+Feature Engineering
+Quantum Algorithm Integration
+Model Development
+Model Evaluation
+Backend Development
+Dashboard Development
+Documentation
+Project Presentation
+
+Regular discussions and technical reviews helped ensure seamless integration of all project components and successful completion within the hackathon timeline.

@@ -1,0 +1,534 @@
+# Financial Anomaly Detection using Quantum Machine Learning (QML)
+
+# Approach_and_Why_QML.txt
+
+---
+
+# 1. Introduction
+
+Financial fraud detection is a challenging classification problem due to the increasing volume of digital transactions, evolving fraud patterns, and highly imbalanced datasets. Traditional machine learning algorithms have significantly improved fraud detection systems; however, they still face challenges in identifying complex nonlinear relationships within transaction data.
+
+This project adopts a **Hybrid Quantum Machine Learning (QML)** approach that combines classical data preprocessing techniques with **Quantum Support Vector Classification (QSVC)** to detect anomalous financial transactions. The solution utilizes quantum feature mapping and a quantum kernel to represent transaction data in a richer feature space, potentially improving classification performance.
+
+This document explains the overall methodology, the rationale behind each design choice, and why Quantum Machine Learning was selected for this project.
+
+---
+
+# 2. Overall Approach
+
+The proposed system follows a hybrid quantum-classical machine learning pipeline.
+
+```text
+Financial Transaction Dataset
+            │
+            ▼
+Data Loading and Cleaning
+            │
+            ▼
+Feature Engineering
+            │
+            ▼
+Data Preprocessing
+(Standardization + Encoding)
+            │
+            ▼
+Train-Test-Validation Split
+            │
+            ▼
+Quantum Feature Mapping
+            │
+            ▼
+Fidelity Quantum Kernel
+            │
+            ▼
+Quantum Support Vector Classifier
+            │
+            ▼
+Threshold Optimization
+            │
+            ▼
+Performance Evaluation
+            │
+            ▼
+Interactive Dashboard
+```
+
+Each stage is designed to improve the quality of data before it reaches the quantum learning model.
+
+---
+
+# 3. Dataset Selection
+
+The project uses a financial transaction dataset containing historical transaction records.
+
+Each record represents a single financial transaction with attributes such as:
+
+* Transaction Amount
+* Transaction Type
+* User ID
+* Transaction Timestamp
+* Fraud Label (Normal / Anomaly)
+
+These attributes provide sufficient information to identify behavioral patterns associated with fraudulent transactions.
+
+The dataset is first sampled and organized before any machine learning operations begin.
+
+---
+
+# 4. Data Preprocessing
+
+Raw financial data cannot be directly used for machine learning because it often contains inconsistent formats and varying numerical scales.
+
+Therefore, preprocessing is performed before model training.
+
+## 4.1 Data Cleaning
+
+The dataset is:
+
+* Loaded into memory
+* Sorted chronologically
+* Organized by user
+* Converted into proper datetime format
+
+Chronological ordering enables the extraction of behavioral features such as transaction intervals.
+
+---
+
+## 4.2 Feature Engineering
+
+Instead of using only the original dataset columns, additional behavioral features are generated.
+
+### Transaction Amount
+
+Represents the monetary value of each transaction.
+
+Large or unusually small amounts may indicate fraudulent behavior.
+
+---
+
+### Hour of Transaction
+
+Extracted from the timestamp.
+
+Example:
+
+```text
+08:15 AM
+↓
+
+Hour = 8
+```
+
+Many frauds occur during unusual hours when monitoring is reduced.
+
+---
+
+### Day of Week
+
+Extracting the weekday allows the model to learn weekly spending behavior.
+
+For example:
+
+```text
+Monday → 0
+Tuesday → 1
+...
+Sunday → 6
+```
+
+Certain fraudulent activities may occur more frequently on weekends or holidays.
+
+---
+
+### Time Since Last Transaction
+
+This feature measures the time difference between consecutive transactions made by the same user.
+
+Example:
+
+```text
+Transaction A : 10:00
+
+Transaction B : 10:02
+
+Difference = 120 seconds
+```
+
+Very short intervals between multiple transactions can indicate suspicious automated activity.
+
+---
+
+### Transaction Frequency
+
+This represents the total number of transactions made by a user.
+
+Users with unusually high transaction frequency may require additional attention.
+
+---
+
+# 5. Data Transformation
+
+Machine learning algorithms require numerical input with comparable scales.
+
+Therefore, two preprocessing techniques are applied.
+
+---
+
+## 5.1 StandardScaler
+
+Numerical features such as:
+
+* Amount
+* Transaction Frequency
+* Time Since Last Transaction
+* Hour
+* Day
+
+are standardized.
+
+Formula:
+
+```text
+Z = (X − Mean) / Standard Deviation
+```
+
+Advantages:
+
+* Faster model convergence
+* Prevents large values from dominating
+* Improves SVM performance
+
+---
+
+## 5.2 One-Hot Encoding
+
+Transaction type is categorical.
+
+Examples:
+
+```text
+Deposit
+
+Withdrawal
+
+Transfer
+
+Purchase
+
+Suspicious
+```
+
+These categories are converted into binary vectors.
+
+Example:
+
+| Transaction | Deposit | Purchase | Transfer |
+| ----------- | ------- | -------- | -------- |
+| Deposit     | 1       | 0        | 0        |
+| Transfer    | 0       | 0        | 1        |
+
+Machine learning models require numerical values, making one-hot encoding essential.
+
+---
+
+# 6. Train-Validation-Test Split
+
+The processed dataset is divided into:
+
+* Training Set (60%)
+* Validation Set (20%)
+* Test Set (20%)
+
+Purpose:
+
+Training Set
+
+* Learn model parameters
+
+Validation Set
+
+* Optimize threshold
+
+Test Set
+
+* Final evaluation
+
+Keeping the test dataset completely unseen ensures unbiased evaluation.
+
+---
+
+# 7. Why Quantum Machine Learning?
+
+Traditional Support Vector Machines rely on classical kernels such as:
+
+* Linear Kernel
+* Polynomial Kernel
+* Radial Basis Function (RBF)
+
+Although effective, these kernels may struggle to separate highly complex nonlinear financial patterns.
+
+Quantum Machine Learning introduces **Quantum Feature Spaces**, allowing data to be represented using quantum states.
+
+This richer representation can improve the separability of difficult classification problems.
+
+---
+
+# 8. Quantum Feature Mapping
+
+Classical transaction features cannot be processed directly by quantum algorithms.
+
+They must first be encoded into quantum states.
+
+This project uses:
+
+## ZZFeatureMap
+
+The ZZFeatureMap is a parameterized quantum circuit that transforms classical feature vectors into quantum states.
+
+Conceptually:
+
+```text
+Classical Features
+
+↓
+
+Quantum Gates
+
+↓
+
+Entangled Quantum State
+
+↓
+
+Quantum Feature Space
+```
+
+Advantages:
+
+* Captures nonlinear interactions
+* Creates entangled feature representations
+* Suitable for kernel-based quantum learning
+
+---
+
+# 9. Fidelity Quantum Kernel
+
+After quantum encoding, similarity between transactions must be computed.
+
+Instead of Euclidean distance, this project uses the **Fidelity Quantum Kernel**.
+
+The kernel measures how similar two quantum states are.
+
+Higher fidelity means:
+
+```text
+Transaction A ≈ Transaction B
+```
+
+Lower fidelity indicates:
+
+```text
+Transactions are significantly different.
+```
+
+This similarity matrix becomes the kernel used by the QSVC.
+
+Advantages include:
+
+* Rich nonlinear similarity
+* Quantum-enhanced representation
+* Better separation of overlapping classes
+
+---
+
+# 10. Quantum Support Vector Classifier (QSVC)
+
+The Quantum Support Vector Classifier is the core classification algorithm.
+
+It extends the traditional Support Vector Machine by replacing the classical kernel with a quantum kernel.
+
+Workflow:
+
+```text
+Input Features
+
+↓
+
+Quantum Feature Map
+
+↓
+
+Quantum Kernel
+
+↓
+
+Kernel Matrix
+
+↓
+
+Support Vector Optimization
+
+↓
+
+Prediction
+```
+
+The QSVC attempts to find the optimal decision boundary separating normal transactions from fraudulent ones.
+
+---
+
+# 11. Handling Class Imbalance
+
+Fraud detection datasets are naturally imbalanced.
+
+Example:
+
+```text
+98% Normal
+
+2% Fraud
+```
+
+If ignored, the model may classify almost every transaction as normal.
+
+To reduce this problem:
+
+* Class weights are applied during QSVC training.
+* Fraud samples receive higher importance.
+* The model becomes more sensitive to anomalous transactions.
+
+This helps improve recall without significantly sacrificing precision.
+
+---
+
+# 12. Threshold Optimization
+
+The QSVC produces decision scores rather than direct anomaly probabilities.
+
+Instead of using a default threshold, this project searches for the threshold that maximizes the **F1-score** on the validation dataset.
+
+Benefits:
+
+* Better balance between Precision and Recall
+* Reduced false positives
+* Reduced false negatives
+* Improved anomaly detection
+
+Threshold tuning is particularly important in fraud detection, where the cost of missed fraud can be much higher than a false alarm.
+
+---
+
+# 13. Classical Baseline Comparison
+
+To evaluate the effectiveness of the quantum approach, a **Random Forest Classifier** is trained using the same dataset.
+
+The Random Forest serves as a baseline.
+
+Comparing both models provides insights into:
+
+* Accuracy
+* Precision
+* Recall
+* F1-score
+* ROC-AUC
+
+This comparison helps determine whether the quantum model offers meaningful advantages over a widely used classical algorithm.
+
+---
+
+# 14. Model Evaluation
+
+The trained models are evaluated using several standard metrics.
+
+### Accuracy
+
+Measures the overall percentage of correct predictions.
+
+### Precision
+
+Indicates how many transactions predicted as fraudulent were actually fraudulent.
+
+### Recall
+
+Measures how many actual fraudulent transactions were successfully detected.
+
+### F1-Score
+
+Provides a balanced measure of precision and recall.
+
+### ROC-AUC
+
+Evaluates the model's ability to distinguish between normal and fraudulent transactions across different thresholds.
+
+### Confusion Matrix
+
+Displays:
+
+* True Positives
+* False Positives
+* True Negatives
+* False Negatives
+
+These metrics collectively provide a comprehensive assessment of model performance.
+
+---
+
+# 15. Interactive Dashboard
+
+To make the model accessible to users, the project includes a dashboard built with **Plotly Dash**.
+
+Users can manually enter:
+
+* Transaction Amount
+* Transaction Type
+* Hour
+* Day
+* Time Since Last Transaction
+* Transaction Frequency
+
+After submission, the trained QSVC predicts whether the transaction is anomalous and displays an anomaly score.
+
+This interface demonstrates how the model could be integrated into real-world fraud monitoring systems.
+
+---
+
+# 16. Why This Approach is Effective
+
+The proposed methodology combines the strengths of classical and quantum computing.
+
+### Classical Computing Strengths
+
+* Efficient data preprocessing
+* Reliable feature engineering
+* Mature machine learning ecosystem
+* Fast numerical computation
+
+### Quantum Computing Strengths
+
+* Rich quantum feature representations
+* Nonlinear kernel learning
+* High-dimensional feature spaces
+* Exploration of emerging quantum algorithms
+
+By combining both paradigms, the project creates a hybrid solution that is practical on current hardware while exploring the future potential of Quantum Machine Learning.
+
+---
+
+# 17. Limitations
+
+Although promising, the current approach has some limitations.
+
+* Simulated quantum execution is slower than classical inference.
+* Real quantum hardware has limited qubits and is affected by noise.
+* Large-scale datasets remain computationally expensive.
+* Quantum Machine Learning is still an active area of research with evolving best practices.
+
+These limitations are expected to improve as quantum hardware and software continue to mature.
+
+---
+
+# 18. Conclusion
+
+This project demonstrates a complete hybrid Quantum Machine Learning pipeline for financial anomaly detection. Beginning with data preprocessing and feature engineering, the system transforms classical transaction data into quantum feature representations using the ZZFeatureMap and evaluates similarities through a Fidelity Quantum Kernel. The Quantum Support Vector Classifier then performs classification, while threshold optimization and comprehensive evaluation ensure reliable performance.
+
+By integrating a real-time dashboard and comparing results with a classical Random Forest model, the project provides both a practical fraud detection solution and an exploration of the capabilities of Quantum Machine Learning. It highlights how hybrid quantum-classical approaches can contribute to the future of intelligent financial security systems as quantum technologies continue to advance.

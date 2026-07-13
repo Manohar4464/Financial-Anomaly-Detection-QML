@@ -1,0 +1,683 @@
+# Financial Anomaly Detection using Quantum Machine Learning (QML)
+
+# Code_Explanation.txt 
+
+---
+
+# 1. Introduction
+
+This document provides a detailed explanation of the implementation of the **Financial Anomaly Detection using Quantum Machine Learning (QML)** project. The application combines classical machine learning preprocessing techniques with Quantum Machine Learning algorithms to detect fraudulent financial transactions. It uses **Quantum Support Vector Classification (QSVC)** with a **Fidelity Quantum Kernel** and includes a dashboard for real-time anomaly prediction.
+
+The code is organized into modular functions, where each function is responsible for a specific stage of the machine learning pipeline. This modular design improves readability, simplifies maintenance, and allows individual components to be modified or reused independently.
+
+---
+
+# 2. Overall Execution Flow
+
+The complete execution of the program follows the sequence below:
+
+```text
+Start
+   │
+   ▼
+Load Transaction Dataset
+   │
+   ▼
+Preprocess Data
+   │
+   ▼
+Generate Additional Features
+   │
+   ▼
+Scale & Encode Features
+   │
+   ▼
+Split Dataset
+   │
+   ▼
+Train QSVC Model
+   │
+   ▼
+Optimize Decision Threshold
+   │
+   ▼
+Evaluate Model Performance
+   │
+   ▼
+Train Random Forest (Baseline)
+   │
+   ▼
+Compare Results
+   │
+   ▼
+Launch Dashboard
+   │
+   ▼
+End
+```
+
+Each stage contributes to improving the quality of predictions while maintaining a clear separation between data processing, model training, evaluation, and deployment.
+
+---
+
+# 3. Libraries Used
+
+The project uses a combination of Python libraries for data manipulation, machine learning, quantum computing, visualization, and web application development.
+
+### NumPy
+
+NumPy provides efficient numerical operations and array manipulation. It is used for mathematical computations, threshold optimization, and label transformations.
+
+### Pandas
+
+Pandas manages tabular transaction data. It simplifies reading CSV files, sorting records, feature extraction, and preparing data for machine learning.
+
+### Scikit-Learn
+
+Scikit-Learn provides essential machine learning utilities including:
+
+* Train-Test Split
+* StandardScaler
+* OneHotEncoder
+* ColumnTransformer
+* Random Forest Classifier
+* Performance Metrics
+
+These components form the classical machine learning portion of the project.
+
+### Qiskit Machine Learning
+
+Qiskit provides quantum machine learning algorithms and quantum kernels.
+
+The project specifically uses:
+
+* ZZFeatureMap
+* FidelityQuantumKernel
+* QSVC
+
+These components perform the quantum-enhanced classification.
+
+### Matplotlib
+
+Matplotlib is used for plotting:
+
+* Confusion Matrix
+* Anomaly Score Histogram
+
+These visualizations help evaluate model performance.
+
+### Dash
+
+Dash creates the interactive web dashboard where users can manually enter transaction details and receive real-time anomaly predictions.
+
+---
+
+# 4. Function: load_and_preprocess_data()
+
+## Purpose
+
+This function is responsible for converting raw transaction records into a machine-learning-ready dataset.
+
+Since machine learning models cannot directly process raw financial data, preprocessing is essential.
+
+This function performs:
+
+* Data loading
+* Sampling
+* Sorting
+* Datetime conversion
+* Feature engineering
+* Feature scaling
+* Categorical encoding
+
+It returns the processed feature matrix along with useful preprocessing objects for later use.
+
+---
+
+## Inputs
+
+**filepath**
+
+Path to the CSV dataset.
+
+**downsample_frac**
+
+Percentage of the dataset to use.
+
+Reducing the dataset size helps decrease the computational cost of quantum algorithms, which are significantly more expensive than classical models.
+
+**random_state**
+
+Ensures reproducibility by generating the same random sample each time the program runs.
+
+---
+
+## Step 1 – Loading the Dataset
+
+The function first loads the CSV file using Pandas.
+
+```python
+df = pd.read_csv(filepath)
+```
+
+At this stage, every row represents one financial transaction.
+
+---
+
+## Step 2 – Downsampling
+
+Quantum machine learning algorithms require considerable computational resources.
+
+Instead of processing the entire dataset, a random subset is selected.
+
+Benefits include:
+
+* Faster execution
+* Reduced memory usage
+* Lower quantum simulation cost
+
+This allows experimentation without sacrificing overall data diversity.
+
+---
+
+## Step 3 – Sorting Transactions
+
+The dataset is sorted by:
+
+* User ID
+* Transaction Time
+
+This ordering enables the calculation of behavioral features such as transaction intervals and user activity patterns.
+
+Without chronological ordering, these features would not be meaningful.
+
+---
+
+## Step 4 – Datetime Conversion
+
+Transaction timestamps are converted into Python datetime objects.
+
+This enables extraction of useful temporal information such as:
+
+* Hour
+* Day of Week
+* Time Difference Between Transactions
+
+Time-based patterns often reveal suspicious behavior that is difficult to detect using transaction amount alone.
+
+---
+
+## Step 5 – Feature Engineering
+
+The function generates several new features.
+
+### Hour
+
+Represents the hour during which the transaction occurred.
+
+Fraud often occurs during unusual hours when users are less active.
+
+---
+
+### Day of Week
+
+Represents the weekday of the transaction.
+
+Weekly behavioral patterns help distinguish normal spending from suspicious activities.
+
+---
+
+### Time Since Last Transaction
+
+This feature measures the number of seconds between two consecutive transactions performed by the same user.
+
+For example:
+
+```text
+Transaction 1 : 09:00
+
+Transaction 2 : 09:01
+
+Difference = 60 seconds
+```
+
+Very small intervals may indicate automated fraudulent transactions.
+
+---
+
+### Transaction Frequency
+
+Counts how many transactions belong to each user.
+
+Users with unusually high transaction frequency may exhibit abnormal behavior.
+
+---
+
+## Step 6 – Feature Scaling
+
+Numerical features have different ranges.
+
+Example:
+
+```text
+Amount
+
+0 – 50,000
+
+Hour
+
+0 – 23
+```
+
+Without scaling, larger numerical values dominate the learning process.
+
+StandardScaler normalizes all numerical features so that each contributes equally during model training.
+
+---
+
+## Step 7 – One-Hot Encoding
+
+The transaction type is categorical.
+
+Examples include:
+
+* Deposit
+* Withdrawal
+* Purchase
+* Transfer
+* Suspicious
+
+Machine learning models require numerical input.
+
+One-Hot Encoding converts each category into binary vectors.
+
+Example:
+
+| Transaction | Deposit | Purchase | Transfer |
+| ----------- | ------- | -------- | -------- |
+| Deposit     | 1       | 0        | 0        |
+| Transfer    | 0       | 0        | 1        |
+
+---
+
+## Step 8 – Returning Results
+
+Finally, the function returns:
+
+* Processed feature matrix
+* Original dataframe
+* Preprocessor object
+* Numerical feature names
+* Categorical feature names
+
+These outputs are reused throughout the remaining pipeline, avoiding repeated preprocessing.
+
+---
+
+# 5. Function: train_qsvc_binary()
+
+## Purpose
+
+This function trains the **Quantum Support Vector Classifier (QSVC)**.
+
+Unlike classical Support Vector Machines that use kernels such as Linear or RBF, QSVC employs a **Quantum Kernel** to compute similarity between data points.
+
+This allows financial transactions to be represented in a richer quantum feature space.
+
+---
+
+## Step 1 – Creating the Quantum Feature Map
+
+The function creates a **ZZFeatureMap**.
+
+The feature map converts classical numerical features into quantum states using parameterized quantum gates.
+
+Conceptually:
+
+```text
+Classical Features
+
+↓
+
+Quantum Circuit
+
+↓
+
+Quantum State
+```
+
+The project uses linear entanglement, allowing neighboring qubits to interact and capture relationships between input features.
+
+---
+
+## Step 2 – Fidelity Quantum Kernel
+
+After encoding the data, the Fidelity Quantum Kernel computes the similarity between quantum states.
+
+Instead of measuring similarity in classical Euclidean space, it compares quantum state overlap, providing a more expressive representation for nonlinear classification problems.
+
+---
+
+## Step 3 – Training QSVC
+
+The QSVC receives:
+
+* Quantum Kernel
+* Training Data
+* Class Weights
+
+The classifier learns an optimal decision boundary that separates normal and fraudulent transactions.
+
+Because fraud datasets are imbalanced, class weights increase the importance of fraudulent samples during training.
+
+---
+
+## Step 4 – Training Time
+
+The execution time is recorded before and after training.
+
+Measuring training time helps evaluate the computational cost of Quantum Machine Learning compared to classical algorithms.
+
+---
+
+# 6. Function: train_random_forest()
+
+## Purpose
+
+The Random Forest classifier serves as a **classical baseline** for comparison.
+
+Random Forest is widely used because it is robust, handles nonlinear relationships well, and performs effectively on structured tabular data.
+
+Using a baseline allows the project to compare the quantum model against a proven classical approach.
+
+The model is trained using the same processed dataset, ensuring that both algorithms are evaluated under identical conditions. Balanced class weights are applied to reduce the impact of class imbalance and improve fraud detection performance.
+
+---
+7. Function: evaluate_model()
+Purpose
+
+Once the Quantum Support Vector Classifier (QSVC) and Random Forest models are trained, their performance must be measured objectively. The evaluate_model() function calculates several evaluation metrics that provide a complete understanding of the classifier's effectiveness.
+
+Unlike simple accuracy, fraud detection requires multiple evaluation metrics because fraudulent transactions usually represent only a small fraction of the dataset. A model that predicts every transaction as normal may achieve high accuracy but completely fail at detecting fraud.
+
+Input Parameters
+
+The function receives three inputs:
+
+y_true – The actual class labels from the test dataset.
+y_pred – The predicted class labels generated by the model.
+scores – The decision scores or anomaly scores produced by the classifier.
+
+These inputs allow the function to compute various performance metrics.
+
+Evaluation Metrics
+Accuracy
+
+Accuracy measures the percentage of correctly classified transactions.
+
+Formula:
+
+Accuracy = Correct Predictions / Total Predictions
+
+Although accuracy provides an overall performance measure, it should not be used alone for fraud detection because of class imbalance.
+
+Precision
+
+Precision answers the question:
+
+"Among all transactions predicted as fraudulent, how many were actually fraudulent?"
+
+A high precision indicates fewer false alarms.
+
+Recall
+
+Recall measures the model's ability to identify actual fraudulent transactions.
+
+It answers:
+
+"Out of all fraudulent transactions, how many were detected?"
+
+High recall is particularly important in financial fraud detection because missing fraudulent transactions can result in significant financial losses.
+
+F1 Score
+
+The F1 Score combines Precision and Recall into a single metric.
+
+It is especially useful when dealing with imbalanced datasets because it balances the trade-off between false positives and false negatives.
+
+ROC-AUC Score
+
+The Area Under the Receiver Operating Characteristic Curve (ROC-AUC) evaluates the model's ability to distinguish between normal and fraudulent transactions across different decision thresholds.
+
+Higher ROC-AUC values indicate stronger classification performance.
+
+Confusion Matrix
+
+The Confusion Matrix summarizes prediction results into four categories:
+
+True Positive (TP): Fraud correctly detected.
+True Negative (TN): Normal transaction correctly classified.
+False Positive (FP): Normal transaction incorrectly flagged as fraud.
+False Negative (FN): Fraud missed by the system.
+
+This matrix provides valuable insights into the types of errors made by the classifier.
+
+8. Function: plot_confusion_matrix()
+Purpose
+
+The confusion matrix values are easier to understand when displayed visually.
+
+This function uses Matplotlib to generate a graphical representation of the confusion matrix.
+
+The visualization clearly shows how many transactions were correctly and incorrectly classified, making it easier to analyze model performance.
+
+Displaying values inside each cell further improves interpretability for users and researchers.
+
+9. Function: plot_reconstruction_error_histogram()
+Purpose
+
+Although QSVC is a classification algorithm rather than an autoencoder, the project visualizes the distribution of anomaly scores generated by the classifier.
+
+The histogram separates:
+
+Normal Transactions
+Fraudulent Transactions
+
+A clear separation between the two distributions indicates that the model effectively distinguishes normal behavior from anomalous activity.
+
+If the distributions overlap significantly, additional feature engineering or model tuning may be required.
+
+This visualization is useful for selecting an appropriate anomaly detection threshold.
+
+10. Function: find_best_threshold()
+Purpose
+
+The QSVC produces continuous decision scores rather than direct binary outputs.
+
+Instead of using a fixed threshold, this function searches for the threshold that maximizes the F1 Score on the validation dataset.
+
+Working Principle
+Generate multiple candidate threshold values.
+Convert decision scores into binary predictions using each threshold.
+Calculate the F1 Score for each threshold.
+Select the threshold with the highest F1 Score.
+Return the optimal threshold.
+
+This process ensures a balanced trade-off between Precision and Recall.
+
+Optimizing the threshold is particularly important in fraud detection, where reducing missed fraud (false negatives) is often more valuable than minimizing false alarms.
+
+11. Function: create_dashboard()
+Purpose
+
+The dashboard transforms the trained machine learning model into an interactive application.
+
+Instead of writing Python code to test transactions, users can manually enter transaction details through a graphical interface.
+
+This demonstrates how the trained model can be integrated into practical fraud monitoring systems.
+
+Dashboard Components
+
+The dashboard contains:
+
+Transaction Amount
+Transaction Type
+Hour
+Day of Week
+Time Since Last Transaction
+Transaction Frequency
+
+A Predict Anomaly button triggers the prediction process.
+
+Prediction Workflow
+
+When the user submits transaction details:
+
+Input values are collected.
+Missing values are handled if necessary.
+The trained preprocessing pipeline transforms the input.
+The QSVC predicts a decision score.
+The anomaly score is calculated.
+The optimized threshold is applied.
+The dashboard displays whether the transaction is Normal or Anomalous, along with its anomaly score.
+
+This real-time workflow illustrates the practical usability of the model beyond offline experimentation.
+
+12. Main Execution Flow (main Function)
+
+The main block coordinates the entire project from beginning to end.
+
+The execution sequence is as follows:
+
+Load Dataset
+      │
+      ▼
+Preprocess Data
+      │
+      ▼
+Generate Features
+      │
+      ▼
+Split Dataset
+      │
+      ▼
+Train QSVC
+      │
+      ▼
+Optimize Threshold
+      │
+      ▼
+Evaluate QSVC
+      │
+      ▼
+Train Random Forest
+      │
+      ▼
+Compare Results
+      │
+      ▼
+Launch Dashboard
+
+This modular structure improves readability and makes future enhancements easier to implement.
+
+13. Time Complexity Analysis
+
+The computational complexity varies across different stages of the project.
+
+Data Loading
+
+Time Complexity: O(n)
+
+Every transaction is read once from the dataset.
+
+Feature Engineering
+
+Time Complexity: O(n)
+
+Each transaction is processed to generate additional behavioral features.
+
+Standardization
+
+Time Complexity: O(n × m)
+
+Where:
+
+n = Number of samples
+m = Number of numerical features
+One-Hot Encoding
+
+Time Complexity: O(n × c)
+
+Where c represents the number of categorical values.
+
+Random Forest Training
+
+Approximately:
+
+O(t × n log n)
+
+where t is the number of trees.
+
+QSVC Training
+
+The computational cost depends on the kernel matrix computation.
+
+Approximate complexity:
+
+O(n²) to O(n³)
+
+This is one reason the project downsamples the dataset before training.
+
+14. Space Complexity
+
+The primary memory usage comes from:
+
+Transaction dataset
+Encoded feature matrix
+Quantum kernel matrix
+Trained models
+
+Approximate space complexity:
+
+O(n × m)
+
+where:
+
+n = Number of samples
+m = Number of processed features
+
+The quantum kernel matrix may require additional memory because it stores pairwise similarities between training samples.
+
+15. Strengths of the Implementation
+
+The implementation offers several advantages:
+
+Modular and reusable code structure.
+Hybrid quantum-classical workflow.
+Comprehensive feature engineering.
+Automatic preprocessing pipeline.
+Threshold optimization for improved fraud detection.
+Comparison with a classical baseline.
+Interactive dashboard for real-time prediction.
+Clear evaluation using multiple performance metrics.
+
+These features make the project both educational and suitable as a research prototype.
+
+16. Possible Future Improvements
+
+Several enhancements can further strengthen the project:
+
+Train using larger real-world financial datasets.
+Execute on IBM Quantum hardware instead of simulators.
+Explore Quantum Neural Networks (QNNs).
+Integrate Explainable AI (XAI) techniques for model transparency.
+Support real-time streaming transaction analysis.
+Containerize the application using Docker.
+Deploy the dashboard on cloud platforms for public access.
+Investigate advanced quantum kernels and optimization strategies.
+17. Conclusion
+
+This project demonstrates a complete end-to-end implementation of a Quantum Machine Learning-based Financial Anomaly Detection System. Beginning with raw transaction data, the pipeline performs preprocessing, feature engineering, quantum feature mapping, and classification using the Quantum Support Vector Classifier. The model is rigorously evaluated using multiple performance metrics and benchmarked against a classical Random Forest classifier. Finally, an interactive dashboard enables real-time anomaly prediction, showcasing how research-oriented Quantum Machine Learning techniques can be applied to practical financial security challenges.
+
+The modular design, hybrid quantum-classical architecture, and comprehensive evaluation make this project an excellent foundation for future research in Quantum Machine Learning, fraud detection, and intelligent financial analytics. As quantum hardware and software continue to evolve, approaches like this are expected to play an increasingly important role in next-generation cybersecurity and financial technology solutions.
+
