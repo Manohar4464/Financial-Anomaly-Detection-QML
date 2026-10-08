@@ -502,10 +502,10 @@ This project was developed as part of the **AQVH 2025 Semi-Finals**.
 | Name | Role | Responsibilities |
 |------|------|------------------|
 |R.L.V.L. MANOHAR | Data Preparation & Backend Development | data preprocessing |
-| P. S. V. Ganesh | Dataset Collection & Backend Development | system integration process|
-| M. Moses Pal | Quantum Algorithm Integration & Research and Feature Engineering |
-| M. Vivekananda Siddhardha | Quantum Algorithm Integration & Research and Feature Engineering |
-| M. Nasrima Bee | Model Testing & Performance Analysis|
+| P. S. V. Ganesh | Dataset Collection & Backend Development | collecting and organizing the dataset |
+| M. Moses Pal | Quantum Algorithm Integration & Research and Feature Engineering | integrating quantum algorithms |
+| M. Vivekananda Siddhardha | Quantum Algorithm Integration & Research and Feature Engineering | designing feature engineering strategies |
+| M. Nasrima Bee | Model Testing & Performance Analysis|  trained models and analyzing performance|
 | A. Saranya | Documentation & Presentation |
 
 > Update the table with the actual names and responsibilities of your team members.
