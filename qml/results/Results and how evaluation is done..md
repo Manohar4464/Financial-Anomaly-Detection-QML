@@ -12,15 +12,28 @@ The following screenshots document the model's execution and observed outputs.
 
 ### 1. Model Execution
 
-![Model Execution](results/model_output.png)
+![Model Execution](User_interface.jpeg)
 
 ### 2. Performance Evaluation
 
-![Performance Evaluation](results/accuracy_results.png)
+<table>
+  <tr>
+    <td align="center">
+      <img src="Roc.jpg" width="350" alt="ROC Curve">
+      <br>
+      <b>ROC Curve</b>
+    </td>
+    <td align="center">
+      <img src="Prc.jpg" width="350" alt="precision recall curve">
+      <br>
+      <b>precision recall curve (PrC)</b>
+    </td>
+  </tr>
+</table>
 
 ### 3. Confusion Matrix
 
-![Confusion Matrix](results/confusion_matrix.png)
+![Confusion Matrix](Confusion_matrix.jpeg)
 
 ## Reproducibility and Limitations
 
