@@ -501,12 +501,12 @@ This project was developed as part of the **AQVH 2025 Semi-Finals**.
 
 | Name | Role | Responsibilities |
 |------|------|------------------|
-| Your Name | Backend Developer & Quantum Algorithm Integration | Model development, preprocessing, dashboard integration, evaluation |
-| Member 2 | Data Collection | Dataset preparation |
-| Member 3 | Data Cleaning | Dataset preprocessing |
-| Member 4 | Feature Engineering | Behavioral feature generation |
-| Member 5 | Research | Literature survey and algorithm analysis |
-| Member 6 | Documentation & Testing | Documentation, testing, presentation |
+|R.L.V.L. MANOHAR | Data Preparation & Backend Development | data preprocessing |
+| P. S. V. Ganesh | Dataset Collection & Backend Development | collecting and organizing the dataset |
+| M. Moses Pal | Quantum Algorithm Integration & Research and Feature Engineering | integrating quantum algorithms |
+| M. Vivekananda Siddhardha | Quantum Algorithm Integration & Research and Feature Engineering | designing feature engineering strategies |
+| M. Nasrima Bee | Model Testing & Performance Analysis|  trained models and analyzing performance|
+| A. Saranya | Documentation & Presentation |
 
 > Update the table with the actual names and responsibilities of your team members.
 
@@ -538,11 +538,11 @@ You are free to use, modify, and distribute this project with proper attribution
 
 For questions, collaborations, or suggestions, feel free to connect:
 
-**Name:** Your Name
+**Name:** R.L.V.L. MANOHAR
 
-**Email:** your-email@example.com
+**Email:** manoharravinuthalalvl@gmail.com
 
-**GitHub:** https://github.com/yourusername
+**GitHub:** https://github.com/Manohar4464
 
 ---
 
