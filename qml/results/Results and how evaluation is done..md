@@ -20,7 +20,7 @@ The following screenshots document the model's execution and observed outputs.
 
 ### 3. Confusion Matrix
 
-![Confusion Matrix](results/confusion_matrix.png)
+![Confusion Matrix](results/Confusion_matrix.jpeg)
 
 ## Reproducibility and Limitations
 
