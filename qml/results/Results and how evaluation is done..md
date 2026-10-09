@@ -12,11 +12,11 @@ The following screenshots document the model's execution and observed outputs.
 
 ### 1. Model Execution
 
-![Model Execution](results/model_output.png)
+![Model Execution](Fast_api.png)
 
 ### 2. Performance Evaluation
 
-![Performance Evaluation](results/accuracy_results.png)
+![Performance Evaluation](accuracy_results.png)
 
 ### 3. Confusion Matrix
 
